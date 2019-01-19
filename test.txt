@@ -1,0 +1,10 @@
+file = 'spec/examples/single_class.rb'
+ruby = File.read(file)
+ast = Parser::CurrentRuby.parse(ruby, file)
+ConstantExtractor::ConstructorProcessor.new.process(ast)
+
+
+ module -> continue
+ class -> stop
+
+ module -> module -> nil (stop)
