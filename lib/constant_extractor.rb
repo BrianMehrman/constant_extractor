@@ -6,6 +6,12 @@ require 'pry'
 module ConstantExtractor
   class Error < StandardError; end
 
+  def self.process(filepath)
+    ruby_code = File.read(filepath)
+    ast = Parser::CurrentRuby.parse(ruby_code, filepath)
+    ConstructorProcessor.process(ast)
+  end
+
   class ConstructorProcessor
     include AST::Processor::Mixin
 
