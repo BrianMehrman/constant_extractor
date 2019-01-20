@@ -4,7 +4,7 @@ RSpec.describe ConstantExtractor do
   end
 
   describe '#process' do
-    let(:filepath) { 'spec/examples/single_class.rb' }
+    let(:filepath) { 'spec/examples/simple_constants.rb' }
 
     it 'extracts the classes and modules from the file' do
       expect(ConstantExtractor.process(filepath).flat_map(&:children)).to eq([:GearRatio, :"GearRatio::Foo", :Gear])
@@ -18,12 +18,31 @@ RSpec.describe ConstantExtractor do
 
     subject { ConstantExtractor::ConstructorProcessor }
 
-    it 'extracts the classes and modules from the file' do
-      expect(subject.process(ast).flat_map(&:children)).to eq([:GearRatio, :"GearRatio::Foo", :Gear])
+    context 'with single class' do
+      it 'extracts the class the file' do
+        expect(subject.process(ast).flat_map(&:children)).to eq([:Gear])
+      end
     end
 
-    context 'with namespaced' do
-      let(:filepath) { 'spec/examples/namespaced_class.rb' }
+    context 'with single module' do
+      let(:filepath) { 'spec/examples/single_module.rb' }
+
+      it 'extracts the module the file' do
+        expect(subject.process(ast).flat_map(&:children)).to eq([:Circle])
+      end
+    end
+
+    context 'with simple constants' do
+      let(:filepath) { 'spec/examples/simple_constants.rb' }
+
+      it 'extracts the classes and modules from the file' do
+        expect(subject.process(ast).flat_map(&:children)).to eq([:GearRatio, :"GearRatio::Foo", :Gear])
+      end
+    end
+
+    context 'with namespaced constants' do
+      let(:filepath) { 'spec/examples/namespaced_constants.rb' }
+
       it 'extracts the classes and modules from the file' do
         expect(subject.process(ast).flat_map(&:children)).to eq([
           :Space,

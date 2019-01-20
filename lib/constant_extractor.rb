@@ -19,12 +19,15 @@ module ConstantExtractor
       new.process(node)
     end
 
-    def process_regular_node(node)
+    # Process the module or class nodes to extract the fully qualified name.
+    # param node [AST::Node] - accepts an node to process module or class nodes.
+    # returns [Array] - of AST nodes
+    def process_constant_node(node)
       nodes = process_all(node).compact.flatten
       name = nodes.detect { |n| n.type == :name }
 
       if nodes.length == 1
-        AST::Node.new(node.type, name.children)
+        [AST::Node.new(node.type, name.children)]
       else
         child_nodes = nodes.select { |n| n.type == :class || n.type == :module }
         new_nodes = child_nodes.each_with_object([AST::Node.new(node.type, name.children)]) do |n, a|
@@ -63,7 +66,7 @@ module ConstantExtractor
       nil
     end
 
-    alias on_module         process_regular_node
-    alias on_class          process_regular_node
+    alias on_module         process_constant_node
+    alias on_class          process_constant_node
   end
 end

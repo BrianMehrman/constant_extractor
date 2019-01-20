@@ -22,7 +22,27 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+With a ruby file named `foo.rb` you can extract the class name from the file
+```ruby
+# foo.rb
+module Something
+  class Foo
+    def bar
+      "bar"
+    end
+  end
+end
+```
+
+The module ConstantExtractor has a method `process` that receives the full filepath
+to the ruby file you want to extract the class or module names from.
+
+```ruby
+> nodes = ConstantExtractor.process('foo.rb')
+=> [s(:module, :Something), s(:class, :"Something::Foo")]
+> nodes.flat_map(&:children)
+=> [:Something, :"Something::Foo"]
+```
 
 ## Development
 
