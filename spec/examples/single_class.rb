@@ -5,5 +5,7 @@ class Gear
     @chainring  = chainring
     @cog        = cog
     @wheel      = wheel
+
+    bob = Bob::DontUse.new
   end
 end
